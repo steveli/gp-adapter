@@ -60,7 +60,10 @@ def main():
     grad_fn = theano.function([x], grad)
     print grad_fn(cov)
 
-    from lanczos_theano import reg_cov_mat
+    def reg_cov_mat(x, a, b, c):
+        return (a * np.exp(-b * (x[:, np.newaxis] - x)**2) +
+                c * np.eye(x.shape[0]))
+
     for i in xrange(10):
         cov = reg_cov_mat(np.random.uniform(0, 1, size=n), 1, 8, .1)
         theano.tests.unittest_tools.verify_grad(sqrtm, [cov])
